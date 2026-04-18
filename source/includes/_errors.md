@@ -1,20 +1,19 @@
-# Errors
+# 错误码
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Whiteboard allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
+<aside class="notice">此错误部分存储在 `includes/_errors.md` 的单独文件中。Whiteboard 允许您将文档可选地分成多个文件...只需将它们保存到 `includes` 文件夹，并在 `index.md` 的头部添加引用。文件将按列出的顺序包含。</aside>
 
-The Kittn API uses the following error codes:
+Kittn API 使用以下错误码：
 
-
-Error Code | Meaning
+错误码 | 含义
 ---------- | -------
-400 | Bad Request -- Your request sucks
-401 | Unauthorized -- Your API key is wrong
-403 | Forbidden -- The kitten requested is hidden for administrators only
-404 | Not Found -- The specified kitten could not be found
-405 | Method Not Allowed -- You tried to access a kitten with an invalid method
-406 | Not Acceptable -- You requested a format that isn't json
-410 | Gone -- The kitten requested has been removed from our servers
-418 | I'm a teapot
-429 | Too Many Requests -- You're requesting too many kittens! Slow down!
-500 | Internal Server Error -- We had a problem with our server. Try again later.
-503 | Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+400 | 错误请求 -- 您的请求格式有误
+401 | 未授权 -- 您的 API 密钥不正确
+403 | 禁止访问 -- 请求的猫咪仅对管理员隐藏
+404 | 未找到 -- 找不到指定的猫咪
+405 | 方法不允许 -- 您尝试使用无效的方法访问猫咪
+406 | 不可接受 -- 您请求的格式不是 JSON
+410 | 已移除 -- 请求的猫咪已从我们的服务器中移除
+418 | 我是一个茶壶
+429 | 请求过多 -- 您请求的猫咪太多了！请慢一点！
+500 | 内部服务器错误 -- 我们的服务器出现了问题。请稍后重试。
+503 | 服务不可用 -- 我们暂时因维护而离线。请稍后重试。

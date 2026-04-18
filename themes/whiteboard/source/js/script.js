@@ -22,22 +22,76 @@ under the License.
   global.setupLanguages = setupLanguages;
   global.activateLanguage = activateLanguage;
 
+  function languageMatches(lang, className) {
+    if (!className) return false;
+    var classes = className.toLowerCase().split(/\s+/);
+    
+    var langLower = lang.toLowerCase();
+    var aliases = [langLower];
+    
+    if (langLower === 'javascript') {
+      aliases.push('js');
+    }
+    if (langLower === 'bash') {
+      aliases.push('shell', 'sh');
+    }
+    if (langLower === 'python') {
+      aliases.push('py');
+    }
+    if (langLower === 'ruby') {
+      aliases.push('rb');
+    }
+    
+    for (var i = 0; i < classes.length; i++) {
+      var cls = classes[i];
+      if (cls === 'highlight') continue;
+      if (cls === 'hljs') continue;
+      
+      for (var j = 0; j < aliases.length; j++) {
+        var alias = aliases[j];
+        if (cls === alias || 
+            cls === 'language-' + alias || 
+            cls === 'lang-' + alias) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function getCodeBlocksForLanguage(lang) {
+    var $blocks = $('pre').has('code.highlight');
+    return $blocks.filter(function() {
+      var $code = $(this).find('code').first();
+      return languageMatches(lang, $code.attr('class'));
+    });
+  }
+
   function activateLanguage(language) {
     if (!language) return;
     if (language === "") return;
 
-    $(".lang-selector a").removeClass('active');
-    $(".lang-selector a[data-language-name='" + language + "']").addClass('active');
-    for (var i=0; i < languages.length; i++) {
-      $(".highlight." + languages[i]).parent().hide();
-    }
-    $(".highlight." + language).parent().show();
+    try {
+      $(".lang-selector a").removeClass('active');
+      $(".lang-selector a[data-language-name='" + language + "']").addClass('active');
+      
+      for (var i = 0; i < languages.length; i++) {
+        var $toHide = getCodeBlocksForLanguage(languages[i]);
+        $toHide.hide();
+      }
+      
+      var $toShow = getCodeBlocksForLanguage(language);
+      $toShow.show();
+      
+      if (global.toc && global.toc.calculateHeights) {
+        global.toc.calculateHeights();
+      }
 
-    global.toc.calculateHeights();
-
-    // scroll to the new location of the position
-    if ($(window.location.hash).get(0)) {
-      $(window.location.hash).get(0).scrollIntoView(true);
+      if ($(window.location.hash).get(0)) {
+        $(window.location.hash).get(0).scrollIntoView(true);
+      }
+    } catch (e) {
+      console.error('Error in activateLanguage:', e);
     }
   }
 
@@ -150,10 +204,15 @@ under the License.
 
   // if we click on a language tab, activate that language
   $(function() {
-    $(".lang-selector a").on("click", function() {
+    $(document).on("click", ".lang-selector a", function(e) {
+      e.preventDefault();
       var language = $(this).data("language-name");
-      pushURL(language);
-      activateLanguage(language);
+      try {
+        pushURL(language);
+        activateLanguage(language);
+      } catch (err) {
+        console.error('Error on language tab click:', err);
+      }
       return false;
     });
     window.onpopstate = function() {

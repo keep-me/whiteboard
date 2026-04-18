@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: API 参考文档
 
 language_tabs:
   - bash
@@ -8,8 +8,8 @@ language_tabs:
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='http://github.com/mpociot/whiteboard'>Documentation Powered by Whiteboard</a>
+  - <a href='#'>注册开发者密钥</a>
+  - <a href='http://github.com/mpociot/whiteboard'>由 Whiteboard 提供的文档系统</a>
 
 includes:
   - errors
@@ -17,17 +17,17 @@ includes:
 search: true
 ---
 
-# Introduction
+# 简介
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+欢迎使用 Kittn API！您可以使用我们的 API 访问 Kittn API 接口，获取数据库中各种猫咪、幼猫和品种的信息。
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+我们提供了 Shell、Ruby、Python 和 JavaScript 等多种语言的代码示例！您可以在右侧深色区域查看代码示例，并通过右上角的标签切换示例的编程语言。
 
-This example API documentation page was created with [Whiteboard](http://github.com/mpociot/whiteboard). Feel free to edit it and use it as a base for your own API's documentation.
+这个示例 API 文档页面是使用 [Whiteboard](http://github.com/mpociot/whiteboard) 创建的。您可以自由编辑它，并将其作为您自己 API 文档的基础。
 
-# Authentication
+# 身份认证
 
-> To authorize, use this code:
+> 使用以下代码进行授权：
 
 ```ruby
 require 'kittn'
@@ -42,26 +42,32 @@ api = kittn.authorize('meowmeowmeow')
 ```
 
 ```bash
-# With shell, you can just pass the correct header with each request
+# 使用 Shell，您只需在每个请求中添加正确的请求头
 curl "api_endpoint_here"
   -H "Authorization: meowmeowmeow"
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+```javascript
+const kittn = require('kittn');
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+const api = kittn.authorize('meowmeowmeow');
+```
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+> 请确保将 `meowmeowmeow` 替换为您的 API 密钥。
+
+Kittn 使用 API 密钥来控制 API 访问权限。您可以在我们的[开发者门户](http://example.com/developers)注册新的 Kittn API 密钥。
+
+Kittn 要求在所有发送到服务器的 API 请求中，都需要在请求头中包含如下所示的 API 密钥：
 
 `Authorization: meowmeowmeow`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+您必须将 <code>meowmeowmeow</code> 替换为您的个人 API 密钥。
 </aside>
 
-# Kittens
+# 猫咪管理
 
-## Get All Kittens
+## 获取所有猫咪
 
 ```ruby
 require 'kittn'
@@ -82,45 +88,52 @@ curl "http://example.com/api/kittens"
   -H "Authorization: meowmeowmeow"
 ```
 
-> The above command returns JSON structured like this:
+```javascript
+const kittn = require('kittn');
+
+const api = kittn.authorize('meowmeowmeow');
+api.kittens.get();
+```
+
+> 以上命令返回的 JSON 结构如下：
 
 ```json
 [
   {
     "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
+    "name": "毛茸茸",
+    "breed": "三色猫",
     "fluffiness": 6,
     "cuteness": 7
   },
   {
     "id": 2,
-    "name": "Max",
-    "breed": "unknown",
+    "name": "麦克斯",
+    "breed": "未知",
     "fluffiness": 5,
     "cuteness": 10
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+此接口用于获取所有猫咪信息。
 
-### HTTP Request
+### HTTP 请求
 
 `GET http://example.com/api/kittens`
 
-### Query Parameters
+### 查询参数
 
-Parameter | Default | Description
+参数 | 默认值 | 描述
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+include_cats | false | 如果设置为 true，结果将同时包含成年猫咪。
+available | true | 如果设置为 false，结果将包含已被领养的猫咪。
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+记住 — 一只快乐的猫咪是经过身份认证的猫咪！
 </aside>
 
-## Get a Specific Kitten
+## 获取指定猫咪
 
 ```ruby
 require 'kittn'
@@ -148,28 +161,28 @@ const api = kittn.authorize('meowmeowmeow');
 api.kittens.get(2);
 ```
 
-> The above command returns JSON structured like this:
+> 以上命令返回的 JSON 结构如下：
 
 ```json
 {
   "id": 2,
-  "name": "Max",
-  "breed": "unknown",
+  "name": "麦克斯",
+  "breed": "未知",
   "fluffiness": 5,
   "cuteness": 10
 }
 ```
 
-This endpoint retrieves a specific kitten.
+此接口用于获取指定猫咪的信息。
 
-<aside class="warning">If you're not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside>
+<aside class="warning">如果您不使用管理员 API 密钥，请注意有些仅对管理员隐藏的猫咪将返回 403 禁止访问。</aside>
 
-### HTTP Request
+### HTTP 请求
 
 `GET http://example.com/kittens/<ID>`
 
-### URL Parameters
+### URL 参数
 
-Parameter | Description
+参数 | 描述
 --------- | -----------
-ID | The ID of the kitten to retrieve
+ID | 要获取的猫咪 ID
