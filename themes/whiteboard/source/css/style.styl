@@ -434,6 +434,92 @@ embossed-bg()
       color: #ccc
       border-top: 1px solid #000
       border-bottom: 1px solid #404040
+
+////////////////////////////////////////////////////////////////////////////////
+// CODE BLOCK HEADERS - Language labels and Copy buttons
+////////////////////////////////////////////////////////////////////////////////
+.code-block-header
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  height: 36px
+  background-color: rgba(0, 0, 0, 0.2)
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 0 $main-padding
+  box-sizing: border-box
+
+.language-label
+  color: rgba(255, 255, 255, 0.6)
+  font-size: 12px
+  font-weight: bold
+  text-transform: uppercase
+  letter-spacing: 0.5px
+
+.copy-button
+  background-color: transparent
+  border: 1px solid rgba(255, 255, 255, 0.3)
+  color: rgba(255, 255, 255, 0.7)
+  padding: 4px 10px
+  font-size: 11px
+  font-weight: bold
+  border-radius: 4px
+  cursor: pointer
+  transition: all 0.2s ease
+  display: flex
+  align-items: center
+  gap: 4px
+  text-transform: uppercase
+  letter-spacing: 0.3px
+  -webkit-appearance: none
+  appearance: none
+  outline: none
+
+  &:hover
+    background-color: rgba(255, 255, 255, 0.1)
+    border-color: rgba(255, 255, 255, 0.5)
+    color: #fff
+
+  &:active
+    background-color: rgba(255, 255, 255, 0.2)
+    transform: translateY(1px)
+
+  &.copy-success
+    background-color: rgba(106, 193, 116, 0.3)
+    border-color: #6ac174
+    color: #6ac174
+
+.copy-icon
+  display: inline-block
+  width: 12px
+  height: 12px
+  position: relative
+
+  &:before
+    content: ''
+    position: absolute
+    top: 1px
+    left: 1px
+    width: 7px
+    height: 9px
+    border: 1px solid currentColor
+    border-radius: 2px
+    background-color: transparent
+
+  &:after
+    content: ''
+    position: absolute
+    top: 3px
+    left: 4px
+    width: 7px
+    height: 9px
+    border: 1px solid currentColor
+    border-radius: 2px
+    background-color: rgba(255, 255, 255, 0.05)
+
 ////////////////////////////////////////////////////////////////////////////////
 // RESPONSIVE DESIGN
 ////////////////////////////////////////////////////////////////////////////////
@@ -465,3 +551,14 @@ embossed-bg()
     pre, blockquote
       float: none
       width: auto
+    
+    .code-block-header
+      padding: 0 15px
+      height: 32px
+    
+    .language-label
+      font-size: 11px
+    
+    .copy-button
+      padding: 3px 8px
+      font-size: 10px

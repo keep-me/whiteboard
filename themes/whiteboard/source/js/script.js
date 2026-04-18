@@ -293,3 +293,160 @@ under the License.
     content.unhighlight(highlightOpts);
   }
 })();
+
+/**
+ * Code Block Headers - Language labels and Copy buttons
+ */
+(function (global) {
+  'use strict';
+
+  var languageNameMap = {
+    'bash': 'Shell',
+    'shell': 'Shell',
+    'sh': 'Shell',
+    'ruby': 'Ruby',
+    'rb': 'Ruby',
+    'python': 'Python',
+    'py': 'Python',
+    'javascript': 'JavaScript',
+    'js': 'JavaScript',
+    'json': 'JSON',
+    'html': 'HTML',
+    'css': 'CSS',
+    'go': 'Go',
+    'golang': 'Go',
+    'java': 'Java',
+    'php': 'PHP',
+    'swift': 'Swift',
+    'kotlin': 'Kotlin',
+    'csharp': 'C#',
+    'cs': 'C#',
+    'cpp': 'C++',
+    'c': 'C',
+    'rust': 'Rust',
+    'typescript': 'TypeScript',
+    'ts': 'TypeScript',
+    'yaml': 'YAML',
+    'yml': 'YAML',
+    'xml': 'XML',
+    'sql': 'SQL'
+  };
+
+  function getLanguageDisplayName(lang) {
+    if (!lang) return 'Code';
+    lang = lang.toLowerCase();
+    return languageNameMap[lang] || lang.toUpperCase();
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    } else {
+      var textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(textArea);
+      return Promise.resolve();
+    }
+  }
+
+  function showCopySuccess(button) {
+    var originalText = button.html();
+    button.html('<span class="copy-icon"></span> Copied!');
+    button.addClass('copy-success');
+    setTimeout(function() {
+      button.html(originalText);
+      button.removeClass('copy-success');
+    }, 2000);
+  }
+
+  function createCodeBlockHeader(preElement, lang) {
+    var $pre = $(preElement);
+    var displayName = getLanguageDisplayName(lang);
+    
+    var $header = $('<div class="code-block-header"></div>');
+    var $langLabel = $('<span class="language-label"></span>').text(displayName);
+    var $copyBtn = $('<button class="copy-button" type="button"><span class="copy-icon"></span> Copy</button>');
+    
+    $copyBtn.on('click', function(e) {
+      e.preventDefault();
+      var $code = $pre.find('code');
+      var codeText = $code.text();
+      
+      copyToClipboard(codeText).then(function() {
+        showCopySuccess($copyBtn);
+      }).catch(function(err) {
+        console.error('Copy failed:', err);
+      });
+    });
+    
+    $header.append($langLabel);
+    $header.append($copyBtn);
+    
+    $pre.css('padding-top', '50px');
+    $pre.css('position', 'relative');
+    $pre.prepend($header);
+  }
+
+  function extractLanguageFromElement(preElement) {
+    var $pre = $(preElement);
+    var $highlight = $pre.find('.highlight');
+    
+    if ($highlight.length > 0) {
+      var classList = $highlight.attr('class') || '';
+      var classes = classList.split(/\s+/);
+      for (var i = 0; i < classes.length; i++) {
+        var cls = classes[i];
+        if (cls !== 'highlight' && cls !== '') {
+          return cls;
+        }
+      }
+    }
+    
+    var $code = $pre.find('code');
+    if ($code.length > 0) {
+      var codeClass = $code.attr('class') || '';
+      var codeClasses = codeClass.split(/\s+/);
+      for (var j = 0; j < codeClasses.length; j++) {
+        var codeCls = codeClasses[j];
+        if (codeCls.indexOf('language-') === 0) {
+          return codeCls.replace('language-', '');
+        }
+        if (codeCls.indexOf('lang-') === 0) {
+          return codeCls.replace('lang-', '');
+        }
+        if (codeCls === 'hljs') {
+          continue;
+        }
+        if (codeCls && codeCls !== '') {
+          return codeCls;
+        }
+      }
+    }
+    
+    return null;
+  }
+
+  global.setupCodeBlockHeaders = function() {
+    $('.content pre').each(function() {
+      var $pre = $(this);
+      if ($pre.find('.code-block-header').length > 0) {
+        return;
+      }
+      
+      var lang = extractLanguageFromElement(this);
+      createCodeBlockHeader(this, lang);
+    });
+  };
+
+})(window);

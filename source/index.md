@@ -5,6 +5,7 @@ language_tabs:
   - bash
   - ruby
   - python
+  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -138,6 +139,13 @@ api.kittens.get(2)
 ```bash
 curl "http://example.com/api/kittens/2"
   -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const kittn = require('kittn');
+
+const api = kittn.authorize('meowmeowmeow');
+api.kittens.get(2);
 ```
 
 > The above command returns JSON structured like this:
